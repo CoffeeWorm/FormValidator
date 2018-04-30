@@ -11,25 +11,21 @@
     init: function(node, tipNode, eventType) {
       this.node = node;
       this.tipNode = tipNode;
+      this.tipNode.tip = document.createElement('div');
+      this.tipNode.tip.className = 'u-warn';
+      this.tipNode.append(this.tipNode.tip);
       this.eventType = eventType || 'change';
       this.rule = this.parseRule();
       this.validator = new Validator(this.node.value, this.rule);
     },
     addEvent: function() {
-      var eventHandler = function(e) {
-        var result = this.validator.isValid(this.node.value);
-        this.changeInfo('');
-        if (!result.ok) {
-          this.changeInfo(result.msg);
-        }
-      }.bind(this);
-      this.node.addEventListener(this.eventType, eventHandler);
+      this.node.addEventListener(this.eventType, this.check.bind(this));
     },
     parseRule: function() {
       var tmpRule = {};
       var ruleStr = this.node.getAttribute('data-limit');
       if (!ruleStr) {
-        return;
+        return [];
       }
       ruleStr.split('|').forEach(function(item) {
         item = item.split(':');
@@ -37,10 +33,26 @@
       });
       return tmpRule;
     },
-    changeInfo: function(warn) {
-      if (this.tipNode || warn === '') {
-        this.tipNode.innerHTML = warn;
+    check: function(e) {
+      var tplVal = this.rule.same ? document.querySelector(this.rule.same).value : '';
+      var result = this.validator.isValid(this.node.value, tplVal);
+      //把之前提示的内容清空
+      this.changeInfo('');
+      if (!result.ok) {
+        //若检测有问题 显示提示内容
+        this.changeInfo(result.msg);
       } else {
+        this.node.style.color = 'green';
+      }
+      return result.ok;
+    },
+    changeInfo: function(warn) {
+      warn = warn || '';
+      //如果传入了tipNode
+      if (this.tipNode) {
+        this.tipNode.tip.innerHTML = warn;
+      } else {
+        //没传入tipNode
         alert(warn);
       }
     }
