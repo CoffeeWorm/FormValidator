@@ -120,7 +120,7 @@
         //拼接函数名  
         item = 'validate' + item.substr(0, 1).toUpperCase() + item.substr(1);
         //判断是否通过验证
-        var tmp = this[item]();
+        var tmp =this[item](tplVal);
         if (!tmp.ok) {
           //没通过 result设为false 
           result = tmp;
@@ -128,7 +128,6 @@
           break;
         }
       }
-      result = this.validateSame(tplVal);
       return result;
     },
     validateSame: function(tplVal) {

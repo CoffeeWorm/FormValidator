@@ -41,6 +41,7 @@
       if (!result.ok) {
         //若检测有问题 显示提示内容
         this.changeInfo(result.msg);
+        this.node.style.color = 'inherit';
       } else {
         this.node.style.color = 'green';
       }
