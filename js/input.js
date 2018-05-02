@@ -13,7 +13,7 @@
       this.tipNode = tipNode;
       this.tipNode.tip = document.createElement('div');
       this.tipNode.tip.className = 'u-warn';
-      this.tipNode.append(this.tipNode.tip);
+      this.tipNode.appendChild(this.tipNode.tip);
       this.eventType = eventType || 'change';
       this.rule = this.parseRule();
       this.validator = new Validator(this.node.value, this.rule);
